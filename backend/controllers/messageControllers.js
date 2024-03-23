@@ -79,7 +79,6 @@ const allMessages = asyncHandler(async (req, res) => {
 
 const ChangeMessage = asyncHandler(async (req, res) => {
   const { text, target_lang } = req.body;
-  console.log("check", text);
   const authKey = '81ec9012-d9a4-45ca-ae1c-ab1c1513df7e:fx';
 
   try {

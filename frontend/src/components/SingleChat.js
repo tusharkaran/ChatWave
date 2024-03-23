@@ -18,7 +18,7 @@ import io from "socket.io-client";
 import { ChatState } from "../Context/ChatProvider";
 import ProfileModal from '../miscellaneous/ProfileModel';
 
-const ENDPOINT = "https://chatwave-s6hh.onrender.com/";
+const ENDPOINT = "https://chatwave-s6hh.onrender.com";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -29,8 +29,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const [typing, setTyping] = useState(false);
   const [istyping, setIsTyping] = useState(false);
   const toast = useToast();
-  const { selectedChat, setSelectedChat, user, notification, setNotification } =
-    ChatState();
+
   const defaultOptions = {
     loop: true,
     autoplay: true,
@@ -39,6 +38,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       preserveAspectRatio: "xMidYMid slice",
     },
   };
+  const { selectedChat, setSelectedChat, user, notification, setNotification } =
+    ChatState();
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -71,14 +72,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       });
     }
   };
-
   const getsenderData = () => {
     let usernew = getSenderFull(user, selectedChat.users);
     return usernew?.name || usernew[0]?.name;
   }
 
+
   const sendMessage = async (event) => {
-    console.log("new message", getSenderFull(user, selectedChat.users));
+
+
     let newtextchangemessage = newMessage;
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
@@ -98,7 +100,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       } catch (error) {
         console.error("Error:", error.message);
       }
-
       try {
         const config = {
           headers: {
@@ -115,7 +116,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
-
         socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {
@@ -131,8 +131,44 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connected", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
+
+    // eslint-disable-next-line
+  }, []);
+
+  useEffect(() => {
+    fetchMessages();
+
+    selectedChatCompare = selectedChat;
+    // eslint-disable-next-line
+  }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message recieved", (newMessageRecieved) => {
+      if (
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
+        selectedChatCompare._id !== newMessageRecieved.chat._id
+      ) {
+        if (!notification.includes(newMessageRecieved)) {
+          setNotification([newMessageRecieved, ...notification]);
+          setFetchAgain(!fetchAgain);
+        }
+      } else {
+        setMessages([...messages, newMessageRecieved]);
+      }
+    });
+  });
+
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
+
+    if (!socketConnected) return;
+
     if (!typing) {
       setTyping(true);
       socket.emit("typing", selectedChat._id);
@@ -148,33 +184,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       }
     }, timerLength);
   };
-  useEffect(() => {
-    fetchMessages();
-    selectedChatCompare = selectedChat;
-  }, [selectedChat]);
-
-  useEffect(() => {
-    socket = io(ENDPOINT);
-    socket.emit("setup", user);
-    socket.on("connection", () => setSocketConnected(true));
-    socket.on("typing", () => setIsTyping(true));
-    socket.on("stop typing", () => setIsTyping(false));
-  }, []);
-
-  useEffect(() => {
-    socket.on("message Recieved", (newMessageRecieved) => {
-      if (!selectedChatCompare || selectedChatCompare._id != newMessageRecieved.chat._id) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
-          setFetchAgain(!fetchAgain)
-        }
-      } else {
-        setMessages([...messages, newMessageRecieved]);
-      }
-    })
-  })
-
-
   return (
     <>
       {selectedChat ? (
@@ -196,8 +205,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
             />
             {!selectedChat.isGroupChat ? (
               <>
-                {getsenderData()}
-                {/* {getSender(user, selectedChat.users)} */}
+                {/* {getsenderData()} */}
+                {getSender(user, selectedChat.users)}
                 <ProfileModal user={getSenderFull(user, selectedChat.users)} />
               </>
             ) : (

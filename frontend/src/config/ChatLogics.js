@@ -43,8 +43,12 @@ export const getSender = (loggedUser, users) => {
   if (userInfo) {
     loggedUser = userInfo;
   }
-  return users[0]?._id === (loggedUser?._id || loggedUser[0]) ? users[1].name : users[0].name;
+  return users[0]?._id === (loggedUser?._id || loggedUser[0].id) ? users[1].name : users[0].name;
 };
 export const getSenderFull = (loggedUser, users) => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if (userInfo) {
+    loggedUser = userInfo;
+  }
   return users[0]?._id === loggedUser[0]?._id ? users[1] : users[0];
 };  
