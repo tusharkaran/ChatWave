@@ -4,7 +4,7 @@ import { Input } from "@chakra-ui/input";
 import { Box, Text } from "@chakra-ui/layout";
 import "./styles.css";
 import { IconButton, Spinner, useToast } from "@chakra-ui/react";
-import { getSender, getSenderFull } from "../config/ChatLogics";
+import { getSender, getSenderFull, getSenderLanguage } from "../config/ChatLogics";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import UpdateGroupChatModal from "../miscellaneous/UpdateGroupChatModal";
@@ -85,18 +85,18 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
       try {
-        if ((user[0]?.lang || user.lang) != getSenderFull(user, selectedChat.users)?.lang) {
-          const response = await axios.post("/api/language", {
-            text: newMessage,
-            target_lang: getSenderFull(user, selectedChat.users)?.lang,
-          });
-          console.log("response data", response);
-          const Convertdata = response?.data?.translations[0]?.text;
-          if (Convertdata) {
-            newtextchangemessage = `${newMessage}  ( ${Convertdata} )`;
-            setNewMessage(newtextchangemessage);
-          }
+        // if ((user[0]?.lang || user.lang) != getSenderFull(user, selectedChat.users)?.lang) {
+        const response = await axios.post("/api/language", {
+          text: newMessage,
+          target_lang: getSenderLanguage(user, selectedChat.users)
+        });
+        console.log("response data", response);
+        const Convertdata = response?.data?.translations[0]?.text;
+        if (Convertdata && Convertdata != newtextchangemessage) {
+          newtextchangemessage = `${newMessage}  ( ${Convertdata} )`;
+          setNewMessage(newtextchangemessage);
         }
+        // }
       } catch (error) {
         console.error("Error:", error.message);
       }

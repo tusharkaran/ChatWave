@@ -51,4 +51,12 @@ export const getSenderFull = (loggedUser, users) => {
     loggedUser = userInfo;
   }
   return users[0]?._id === loggedUser[0]?._id ? users[1] : users[0];
+};
+
+export const getSenderLanguage = (loggedUser, users) => {
+  const userInfo = JSON.parse(localStorage.getItem("userInfo"));
+  if (userInfo) {
+    loggedUser = userInfo;
+  }
+  return (users[0]?._id === loggedUser?._id) || (users[0]?._id === loggedUser[0]?._id) ? users[1].lang : users[0].lang;
 };  
