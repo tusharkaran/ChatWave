@@ -85,7 +85,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
       try {
-        if (user[0]?.lang != getSenderFull(user, selectedChat.users)?.lang) {
+        if ((user[0]?.lang || user.lang) != getSenderFull(user, selectedChat.users)?.lang) {
           const response = await axios.post("/api/language", {
             text: newMessage,
             target_lang: getSenderFull(user, selectedChat.users)?.lang,
