@@ -81,7 +81,8 @@ io.on("connection", (socket) => {
         chat.users.forEach((user) => {
             if (user._id == newMessageRecieved.sender._id) return;
 
-            socket.in(user._id).emit("message recieved", newMessageRecieved);
+            const datavalue = socket.in(user._id).emit("message recieved", newMessageRecieved);
+            console.log("Message Send is ", datavalue, " to User ID ", user.id);
         });
     });
 

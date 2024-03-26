@@ -19,6 +19,7 @@ import { ChatState } from "../Context/ChatProvider";
 import ProfileModal from '../miscellaneous/ProfileModel';
 
 const ENDPOINT = "https://chatwave-s6hh.onrender.com";
+// const ENDPOINT = "http://localhost:3000/";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -85,7 +86,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
       try {
-        // if ((user[0]?.lang || user.lang) != getSenderFull(user, selectedChat.users)?.lang) {
         const response = await axios.post("/api/language", {
           text: newMessage,
           target_lang: getSenderLanguage(user, selectedChat.users)
@@ -96,7 +96,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           newtextchangemessage = `${newMessage}  ( ${Convertdata} )`;
           setNewMessage(newtextchangemessage);
         }
-        // }
+
       } catch (error) {
         console.error("Error:", error.message);
       }
