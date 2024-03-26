@@ -4,6 +4,7 @@ import { React, useState } from "react";
 import axios from "axios";
 import { useToast } from "@chakra-ui/react";
 import { useHistory } from "react-router";
+import { ChatState } from "../../Context/ChatProvider";
 
 const Signup = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -16,6 +17,7 @@ const Signup = () => {
   const [picLoading, setPicLoading] = useState(false);
   const toast = useToast();
   const history = useHistory();
+  const { setUser } = ChatState();
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
 
@@ -109,6 +111,7 @@ const Signup = () => {
         isClosable: true,
         position: "bottom",
       });
+      setUser(response.data);
       localStorage.setItem("userInfo", JSON.stringify(response.data));
       setPicLoading(false);
       history.push("/chats");
