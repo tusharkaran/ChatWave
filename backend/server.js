@@ -82,7 +82,7 @@ io.on("connection", (socket) => {
             if (user._id == newMessageRecieved.sender._id) return;
 
             const datavalue = socket.in(user._id).emit("message recieved", newMessageRecieved);
-            console.log("Message Send is ", datavalue, " to User ID ", user.id);
+            console.log("Message Send is ", datavalue, " to User ID ", user._id);
         });
     });
 
