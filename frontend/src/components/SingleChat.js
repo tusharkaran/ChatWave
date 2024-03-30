@@ -116,7 +116,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           },
           config
         );
-        socket.emit("new message", data);
+        socket.emit("new message", data, room);
         setMessages([...messages, data]);
       } catch (error) {
         toast({
