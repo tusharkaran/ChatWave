@@ -1,10 +1,10 @@
+
 const express = require("express");
 const connectDB = require("./config/db");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
-const languageRoutes = require('./routes/languageRoutes')
 const { notFound, errorHandler } = require("../backend/middleware/errorMidleware");
 const path = require("path");
 
@@ -21,7 +21,7 @@ app.use(express.json()); // to accept json data
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
-app.use("/api/language", languageRoutes);
+
 // --------------------------deployment------------------------------
 
 const __dirname1 = path.resolve();
@@ -81,14 +81,9 @@ io.on("connection", (socket) => {
         chat.users.forEach((user) => {
             if (user._id == newMessageRecieved.sender._id) return;
 
-            const datavalue = socket.in(user._id).emit("messageRecieved", newMessageRecieved);
-            console.log("Message Send is ", datavalue, " to User ID ", user._id);
+            socket.in(user._id).emit("message recieved", newMessageRecieved);
         });
-    }
-        // socket.in(room).emit("messageRecieved", newMessageRecieved)
-
-    );
-
+    });
 
     socket.off("setup", () => {
         console.log("USER DISCONNECTED");

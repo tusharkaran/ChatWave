@@ -73,15 +73,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       });
     }
   };
-  const getsenderData = () => {
-    let usernew = getSenderFull(user, selectedChat.users);
-    return usernew?.name || usernew[0]?.name;
-  }
-
 
   const sendMessage = async (event) => {
-
-
     let newtextchangemessage = newMessage;
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
@@ -104,7 +97,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         const config = {
           headers: {
             "Content-type": "application/json",
-            Authorization: `Bearer ${user.token || user[0].token}`,
+            Authorization: `Bearer ${user.token || user.token || user[0].token}`,
           },
         };
         setNewMessage("");
@@ -137,9 +130,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
+
+    // eslint-disable-next-line
   }, []);
-
-
 
   useEffect(() => {
     fetchMessages();
@@ -149,9 +142,9 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.on("messageRecieved", (newMessageRecieved) => {
+    socket.on("message recieved", (newMessageRecieved) => {
       if (
-        !selectedChatCompare ||
+        !selectedChatCompare || // if chat is not selected or doesn't match current chat
         selectedChatCompare._id !== newMessageRecieved.chat._id
       ) {
         if (!notification.includes(newMessageRecieved)) {
