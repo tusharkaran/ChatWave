@@ -18,8 +18,8 @@ import io from "socket.io-client";
 import { ChatState } from "../Context/ChatProvider";
 import ProfileModal from '../miscellaneous/ProfileModel';
 
-// const ENDPOINT = "https://chatwave-s6hh.onrender.com";
-const ENDPOINT = "http://localhost:3000/";
+const ENDPOINT = "https://chatwave-s6hh.onrender.com";
+// const ENDPOINT = "http://localhost:3000/";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
