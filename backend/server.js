@@ -79,11 +79,12 @@ io.on("connection", (socket) => {
 
     socket.on("new message", (newMessageRecieved) => {
         var chat = newMessageRecieved.chat;
-
+        console.log("Socket Container", people);
         if (!chat.users) return console.log("chat.users not defined");
 
         chat.users.forEach((user) => {
             if (user._id == newMessageRecieved.sender._id) return;
+
             console.log("Socket ID", people[user._id])
             if (people[user._id]) {
                 io.to(people[user._id]).emit("message recieved", newMessageRecieved);
