@@ -67,8 +67,14 @@ io.on("connection", (socket) => {
     console.log("Connected to socket.io", socket.id);
 
     socket.on("setup", (userData) => {
-        socket.join(userData._id);
-        people[userData._id] = socket.id;
+        if (Array.isArray(userData)) {
+            socket.join(userData[0]._id);
+            people[userData[0]._id] = socket.id;
+        } else if (typeof userData === 'object') {
+            socket.join(userData._id);
+            people[userData._id] = socket.id;
+        }
+        console.log("people", people)
         socket.emit("connected");
     });
 
