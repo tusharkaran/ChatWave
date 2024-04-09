@@ -20,6 +20,14 @@ const Signup = () => {
   const { setUser } = ChatState();
 
   const togglePasswordVisibility = () => setShowPassword(!showPassword);
+  const handleSignupClick = () => {
+    const signInContainer = document.getElementsByClassName('sign-in-container');
+    const signUpContainer = document.getElementsByClassName('sign-up-container');
+    if (signInContainer && signUpContainer) {
+      signInContainer[0].style.display = 'block';
+      signUpContainer[0].style.display = 'none';
+    }
+  };
 
   const postDetails = (pics) => {
     setPicLoading(true);
@@ -142,91 +150,50 @@ const Signup = () => {
   ];
 
   return (
-    <VStack spacing="5" align="stretch">
-      <FormControl id="name" isRequired>
-        <FormLabel>Name</FormLabel>
-        <Input
-          placeholder="Enter Your Name"
-          onChange={(e) => setName(e.target.value)}
-        />
-      </FormControl>
-      <FormControl id="email" isRequired>
-        <FormLabel>Email Address</FormLabel>
-        <Input
-          type="email"
-          placeholder="Enter Your Email Address"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-      </FormControl>
-      <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
-        <InputGroup size="md">
-          <Input
-            type={showPassword ? "text" : "password"}
-            placeholder="Enter Password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <InputRightElement width="4.5rem">
-            <Button
-              size="sm"
-              onClick={togglePasswordVisibility}
-              variant="ghost"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-      <FormControl id="confirm-password" isRequired>
-        <FormLabel>Confirm Password</FormLabel>
-        <InputGroup size="md">
-          <Input
-            type={showPassword ? "text" : "password"}
-            placeholder="Confirm password"
-            onChange={(e) => setConfirmPassword(e.target.value)}
-          />
-          <InputRightElement width="4.5rem">
-            <Button
-              size="sm"
-              onClick={togglePasswordVisibility}
-              variant="ghost"
-            >
-              {showPassword ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-      <FormControl id="lang" isRequired>
-        <FormLabel>Language</FormLabel>
-        <Select
-          placeholder="Select your language"
-          onChange={(e) => setLanguage(e.target.value)}
-        >
-          {languages.map((lang) => (
-            <option key={lang.code} value={lang.code}>
-              {lang.name}
-            </option>
-          ))}
-        </Select>
-      </FormControl>
-      <FormControl id="pic">
-        <FormLabel>Upload your Picture</FormLabel>
-        <Input
-          type="file"
-          p={1.5}
-          accept="image/*"
-          onChange={(e) => postDetails(e.target.files[0])}
-        />
-      </FormControl>
-      <Button
-        colorScheme="blue"
-        width="100%"
-        onClick={handleSubmit}
-        isLoading={picLoading}
+    <div className="data-form">
+      <h1>Create Account</h1>
+
+      <span>or use your email for registration</span>
+      <Input
+        placeholder="Enter Your Name"
+        onChange={(e) => setName(e.target.value)}
+      />
+      <Input
+        type="email"
+        placeholder="Enter Your Email Address"
+        onChange={(e) => setEmail(e.target.value)}
+      />
+      <Input
+        type={showPassword ? "text" : "password"}
+        placeholder="Enter Password"
+        onChange={(e) => setPassword(e.target.value)}
+      />
+      <Input
+        type={showPassword ? "text" : "password"}
+        placeholder="Confirm password"
+        onChange={(e) => setConfirmPassword(e.target.value)}
+      />
+      <Select
+        placeholder="Select your language"
+        onChange={(e) => setLanguage(e.target.value)}
       >
-        Sign Up
-      </Button>
-    </VStack>
+        {languages.map((lang) => (
+          <option key={lang.code} value={lang.code}>
+            {lang.name}
+          </option>
+        ))}
+      </Select>
+      <input
+        type="file"
+        p={1.5}
+        accept="image/*"
+        onChange={(e) => postDetails(e.target.files[0])}
+      />
+      <Button onClick={handleSubmit}
+        isLoading={picLoading}>Sign Up</Button>
+      <button class="create-account" onClick={handleSignupClick}
+      >Login In</button>
+    </div>
   );
 };
 

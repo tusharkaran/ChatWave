@@ -18,6 +18,17 @@ const Login = () => {
   const { setUser } = ChatState();
 
   const history = useHistory();
+  const handleSignInClick = () => {
+    console.log("check")
+    const signInContainer = document.getElementsByClassName('sign-in-container');
+    const signUpContainer = document.getElementsByClassName('sign-up-container');
+    console.log("check", signInContainer, signUpContainer);
+    if (signInContainer && signUpContainer) {
+
+      signInContainer[0].style.display = 'none';
+      signUpContainer[0].style.display = 'block';
+    }
+  };
 
   const submitHandler = async () => {
     setLoading(true);
@@ -71,63 +82,29 @@ const Login = () => {
   };
 
   return (
-    <VStack spacing="4">
-      <FormControl id="email" isRequired>
-        <FormLabel>Email</FormLabel>
-        <Input
-          value={email}
-          placeholder="Enter your Email ID"
-          onChange={(e) => setEmail(e.target.value)}
-          borderColor="gray.400" // Added border color
-          _focus={{ borderColor: "blue.400" }} // Added focus style
-        />
-      </FormControl>
-      <FormControl id="password" isRequired>
-        <FormLabel>Password</FormLabel>
-        <InputGroup>
-          <Input
-            value={password}
-            placeholder="Enter your Password"
-            type={showPassword ? "text" : "password"}
-            onChange={(e) => setPassword(e.target.value)}
-            borderColor="gray.400" // Added border color
-            _focus={{ borderColor: "blue.400" }} // Added focus style
-          />
-          <InputRightElement width="4.5rem">
-            <Button
-              h="1.75rem"
-              size="sm"
-              onClick={handleClick}
-              variant="ghost" // Changed button variant to ghost
-              _focus={{ outline: "none" }} // Removed focus outline
-            >
-              {showPassword ? "Hide" : "Show"}
-            </Button>
-          </InputRightElement>
-        </InputGroup>
-      </FormControl>
-      <Button
-        colorScheme="blue"
-        width="100%"
-        onClick={submitHandler}
-        isLoading={loading}
-        _hover={{ bg: "blue.600" }} // Added hover style
-      >
-        Login
-      </Button>
-      <Button
-        colorScheme="red"
-        variant="solid"
-        width="100%"
-        onClick={() => {
-          setEmail("guest@example.com");
-          setPassword("123456");
-        }}
-        _hover={{ bg: "red.600" }} // Added hover style
-      >
-        Get Guest User Credentials
-      </Button>
-    </VStack>
+    <div className="data-form">
+      <h1>Sign in</h1>
+      <span>or use your account</span>
+      <input
+        value={email}
+        placeholder="Enter your Email ID"
+        onChange={(e) => setEmail(e.target.value)}
+        borderColor="gray.400" // Added border color
+        _focus={{ borderColor: "blue.400" }} // Added focus style
+      />
+      <input
+        value={password}
+        placeholder="Enter your Password"
+        type={showPassword ? "text" : "password"}
+        onChange={(e) => setPassword(e.target.value)}
+        borderColor="gray.400" // Added border color
+        _focus={{ borderColor: "blue.400" }} // Added focus style
+      />
+      <button onClick={submitHandler}
+        isLoading={loading}>Sign In</button>
+      <button class="create-account" onClick={handleSignInClick}
+      >Create Account</button>
+    </div>
   );
 };
 
