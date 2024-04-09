@@ -54,7 +54,7 @@ const server = app.listen(
 );
 
 const io = require("socket.io")(server, {
-    pingTimeout: 60000,
+    pingTimeout: 180000,
     cors: {
         origin: "http://localhost:3000",
         // credentials: true,
@@ -62,9 +62,11 @@ const io = require("socket.io")(server, {
 });
 
 io.on("connection", (socket) => {
-    console.log("Connected to socket.io");
+    console.log("Connected to socket.io", socket.id);
+    var people = {};
     socket.on("setup", (userData) => {
         socket.join(userData._id);
+        people[userData._id] = socket.id;
         socket.emit("connected");
     });
 
@@ -82,8 +84,13 @@ io.on("connection", (socket) => {
 
         chat.users.forEach((user) => {
             if (user._id == newMessageRecieved.sender._id) return;
+            console.log("Socket ID", people[user._id])
+            if (people[user._id]) {
+                io.to(people[user._id]).emit("message recieved", newMessageRecieved);
+            } else {
+                socket.in(user._id).emit("message recieved", newMessageRecieved);
+            }
 
-            socket.in(user._id).emit("message recieved", newMessageRecieved);
         });
     });
 
