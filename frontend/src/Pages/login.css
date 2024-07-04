@@ -251,7 +251,7 @@
 }
 @media (min-width: 768px) {
     .create-account {
-       display: none;
+       display: none !important;
         }
         
 }
